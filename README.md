@@ -3,8 +3,7 @@
 ![PHP](https://img.shields.io/badge/PHP-Ready-blue)
 ![Selenium](https://img.shields.io/badge/Selenium-Integrated-green)
 ![PHPUnit](https://img.shields.io/badge/PHPUnit-Tested-success)
-![CI](https://github.com/your-username/qa-practice-portal/actions/workflows/phpunit.yml/badge.svg)
-
+[![Run Selenium Test](https://github.com/DalondaIkhimokpa/PHP-Login-Form-Automation-Testing/actions/workflows/test.yml/badge.svg)](https://github.com/DalondaIkhimokpa/PHP-Login-Form-Automation-Testing/actions/workflows/test.yml)
 # Full Stack PHP + QA Automation Project (VSCode + phpMyAdmin + PHPUnit + MySQL  + Java)
 
 > **Goal:** Build a full-stack web project with login/authentication, role-based access, admin CRUD panel, dynamic filtering, and complete manual + automation testing using PHPUnit (PHP), Java Unit Tests, and Selenium (Java). Designed as a **daily repeatable QA + Dev workflow.**
