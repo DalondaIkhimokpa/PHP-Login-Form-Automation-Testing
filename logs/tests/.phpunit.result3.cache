@@ -1,0 +1,1 @@
+{"version":1,"defects":{"AdminTest::testAdminPasswordIsHashed":7,"AdminTest::testAdminHasEmail":7},"times":{"AdminTest::testAdminUserCreation":0.005,"AdminTest::testAdminPasswordIsHashed":0.242,"AdminTest::testAdminHasEmail":0.002,"SimpleTest::testBasicMath":0,"UserAuthTest::testUserCreationAndPasswordVerification":0.535}}

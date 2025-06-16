@@ -1,0 +1,21 @@
+/vendor/
+.env
+*.sock
+.txt
+/log/test/*.log
+.log
+config.php
+db.php
+*.sqlite
+*.log
+/ignore/hashed_pw.php
+/ignore/create_admin.php
+/ignore/.envcreate_users.php
+users.sql
+echo "config.php" >> .gitignore
+/ignore/confignotes.txt
+/ignore/testnotes.txt
+config.php
+DS_Store
+/vendor/
+ignore

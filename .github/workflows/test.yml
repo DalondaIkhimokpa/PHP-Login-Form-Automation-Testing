@@ -1,0 +1,41 @@
+name: Run Selenium Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        ports:
+          - 4444:4444
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, pdo, mysqli, dom, curl
+        coverage: none
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Copy test config (if needed)
+      run: cp config.example.php config.php
+
+    - name: Run Selenium test
+      env:
+        DB_HOST: 127.0.0.1
+        DB_USER: root
+        DB_PASS: root
+        DB_NAME: php_login_db
+        ADMIN_USERNAME: admin
+        ADMIN_PASSWORD: 123456
+      run: |
+        vendor/bin/phpunit --testsuite selenium

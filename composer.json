@@ -1,0 +1,27 @@
+{
+    "name": "dee/php-login-system",
+    "description": "Simple PHP login system with tests",
+    "autoload": {
+        "psr-4": {
+            "Dee\\PhpLoginSystem\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dalonda Ikhimokpa",
+        "email": "your.email@example.com",
+        "homepage": "https://github.com/Dalonda"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^12.2",
+        "php-webdriver/webdriver": "^1.15"
+
+        
+    }
+}
