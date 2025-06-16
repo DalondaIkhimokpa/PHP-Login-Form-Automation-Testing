@@ -31,28 +31,47 @@ jobs:
         extensions: mbstring, pdo, mysqli, dom, curl
         coverage: none
 
-    - name: Install Composer dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl unzip jq default-jre mysql-client
+
+    - name: Install Google Chrome
+      run: |
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+
+    - name: Install matching ChromeDriver
+      run: |
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+        echo "Detected Chrome version: $CHROME_VERSION"
+        JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
+        CHROMEDRIVER_URL=$(curl -s $JSON_URL | jq -r --arg ver "$CHROME_VERSION" '
+          .channels.Stable.downloads.chromedriver[] |
+          select(.platform == "linux64") | .url')
+        echo "Downloading ChromeDriver from $CHROMEDRIVER_URL"
+        curl -sS -o chromedriver.zip "$CHROMEDRIVER_URL"
+        unzip chromedriver.zip
+        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+        sudo chmod +x /usr/local/bin/chromedriver
+
+    - name: Start Selenium Server
+      run: |
+        curl -sS -o selenium-server.jar https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.21.0/selenium-server-4.21.0.jar
+        nohup java -jar selenium-server.jar standalone > selenium.log 2>&1 &
 
     - name: Wait for MySQL
       run: |
-        sudo apt-get install -y mysql-client
         until mysql -h127.0.0.1 -uroot -proot -e "SELECT 1"; do
           echo "Waiting for MySQL..."; sleep 2;
         done
 
     - name: Import DB schema
       run: |
+        ls -l  # Just to verify schema.sql is present
         mysql -h127.0.0.1 -uroot -proot php_login_db < schema.sql
-
-    - name: Start Selenium ChromeDriver
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y default-jre unzip wget
-        wget https://chromedriver.storage.googleapis.com/122.0.6261.111/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/local/bin/
-        nohup chromedriver --port=9515 > /dev/null 2>&1 &
 
     - name: Run Selenium test
       env:
@@ -67,4 +86,5 @@ jobs:
         php -S localhost:80 -t . &
         sleep 3
         vendor/bin/phpunit --testsuite selenium
+
 
