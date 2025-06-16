@@ -46,11 +46,8 @@ jobs:
     - name: Install matching ChromeDriver
       run: |
         CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-        echo "Detected Chrome version: $CHROME_VERSION"
         JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
-        CHROMEDRIVER_URL=$(curl -s $JSON_URL | jq -r --arg ver "$CHROME_VERSION" '
-          .channels.Stable.downloads.chromedriver[] |
-          select(.platform == "linux64") | .url')
+        CHROMEDRIVER_URL=$(curl -s $JSON_URL | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url')
         echo "Downloading ChromeDriver from $CHROMEDRIVER_URL"
         curl -sS -o chromedriver.zip "$CHROMEDRIVER_URL"
         unzip chromedriver.zip
@@ -70,8 +67,13 @@ jobs:
 
     - name: Import DB schema
       run: |
-        ls -l  # Just to verify schema.sql is present
         mysql -h127.0.0.1 -uroot -proot php_login_db < schema.sql
+
+    - name: Install PHP dependencies
+      run: composer install
+
+    - name: Start local server on port 8080
+      run: php -S localhost:8080 -t . &
 
     - name: Run Selenium test
       env:
@@ -81,10 +83,10 @@ jobs:
         DB_NAME: php_login_db
         ADMIN_USERNAME: admin
         ADMIN_PASSWORD: 123456
-        BASE_URL: http://localhost
+        BASE_URL: http://localhost:8080/php-login-system
       run: |
-        php -S localhost:80 -t . &
         sleep 3
         vendor/bin/phpunit --testsuite selenium
+
 
 
