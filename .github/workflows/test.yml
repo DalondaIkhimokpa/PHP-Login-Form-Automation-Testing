@@ -79,10 +79,10 @@ jobs:
       env:
         DB_HOST: 127.0.0.1
         DB_USER: root
-        DB_PASS: root
+        DB_PASS: xxxx
         DB_NAME: php_login_db
-        ADMIN_USERNAME: admin
-        ADMIN_PASSWORD: 123456
+        ADMIN_USERNAME: xxxx
+        ADMIN_PASSWORD: xxxxx
         BASE_URL: http://localhost:8080/php-login-system
       run: |
         sleep 3
